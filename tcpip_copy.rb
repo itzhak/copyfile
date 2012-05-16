@@ -1,3 +1,7 @@
+# Author: Itzhak B. 
+# Description: copy data and files by tcpip protocol
+# Run: ruby examples/receiver.rb, ruby examples/sender.rb
+ 
 require 'socket'
 require 'thread'
 require File.dirname(__FILE__) + '/mylogger.rb'
@@ -5,11 +9,13 @@ require File.dirname(__FILE__) + '/mylogger.rb'
 MIN_PORT_NUM = 49152 #range of legal open ports 
 MAX_PORT_NUM = 65535
 
+# host that send datat and files
 class Sender
   def initialize(addr, port_num)
     @LOG = LOG
     if port_num < MIN_PORT_NUM || port_num > MAX_PORT_NUM
-      @LOG.error("port number #{port_num} should be beetwen #{MIN_PORT_NUM} and beetwen #{MAX_PORT_NUM}")      
+      @LOG.error("port number #{port_num} should be beetwen #{MIN_PORT_NUM} and beetwen \
+                 #{MAX_PORT_NUM}")      
       raise "port number #{port_num} should be beetwen #{MIN_PORT_NUM} and beetwen #{MAX_PORT_NUM}"      
     end
     @socket = TCPSocket.open addr, port_num
@@ -46,11 +52,13 @@ class Sender
   end
 end
 
+# multiclient server that receive data 
 class Receiver
   def initialize port_num
     @LOG = LOG
     if port_num < MIN_PORT_NUM || port_num > MAX_PORT_NUM
-      @LOG.error("port number #{port_num} should be beetwen #{MIN_PORT_NUM} and beetwen #{MAX_PORT_NUM}")      
+      @LOG.error("port number #{port_num} should be beetwen #{MIN_PORT_NUM} and beetwen\
+                   #{MAX_PORT_NUM}")      
       raise "port number #{port_num} should be beetwen #{MIN_PORT_NUM} and beetwen #{MAX_PORT_NUM}"      
     end
     @port_num = port_num
@@ -60,6 +68,7 @@ class Receiver
     @LOG.info("server is on #{addr.join(":")}")
   end
   
+  # start server, when data received it pushed to queue
   def run (queue)
     loop do
       @LOG.debug "waiting on #{@port_num}"
